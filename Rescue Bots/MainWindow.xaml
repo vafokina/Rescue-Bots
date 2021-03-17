@@ -1,0 +1,93 @@
+﻿<Window x:Class="Rescue_Bots.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Rescue_Bots"
+        mc:Ignorable="d"
+        Title="Роботы-спасатели" Height="600" Width="1024" WindowState="Maximized" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" FontSize="16" MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}" MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}">
+    <Grid Style="{DynamicResource LayoutGridStyle}" Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="GridMenu" Grid.ColumnSpan="1" Style="{DynamicResource MenuGridStyle}" MouseDown="GridMenu_MouseDown" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0">
+                <Button Style="{DynamicResource MenuButtonStyle}">
+                    <materialDesign:PackIcon Kind="RobotConfused" Width="25" Height="25"/>
+                </Button>
+                <Label Foreground="White" x:Name="WindowTitle"  Margin="0,0,30,0" ToolTip="Обучающая система - компьютерная игра &quot;Роботы-спасатели&quot; by Vikont" HorizontalAlignment="Center" VerticalAlignment="Center">Роботы-спасатели</Label>
+
+                <Menu IsMainMenu="True" Style="{DynamicResource MenuStyle}">
+                    <MenuItem Header="_Меню" Style="{DynamicResource MenuItemStyle_1}">
+                        <MenuItem x:Name="ButtonOpenMap" Header="Открыть карту" Icon="{materialDesign:PackIcon Kind=FileImportOutline}" Style="{DynamicResource MenuItemStyle_2}" Click="ButtonOpenMap_Click"/>
+                        <Separator Style="{DynamicResource MenuSeparator}"/>
+                        <MenuItem x:Name="DarkTheme" Header="Темная тема" IsCheckable="True" IsChecked="False" Style="{DynamicResource MenuItemStyle_2}" Click="DarkTheme_Click"/>
+                        <Separator Style="{DynamicResource MenuSeparator}"/>
+                        <MenuItem Header="Выход" InputGestureText="Ctrl+E" Icon="{materialDesign:PackIcon Kind=ExitToApp}" Style="{DynamicResource MenuItemStyle_2}" Click="ButtonClose_Click"/>
+                    </MenuItem>
+                    <MenuItem Header="_Помощь" Style="{DynamicResource MenuItemStyle_1}">
+
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                <Button x:Name="ButtonHide" Style="{DynamicResource MenuButtonStyle}" Click="ButtonHide_Click" ToolTip="Свернуть">
+                    <materialDesign:PackIcon Kind="WindowMinimize" Width="25" Height="25"/>
+                </Button>
+                <Button x:Name="ButtonMinMax" Style="{DynamicResource MenuButtonStyle}" Click="ButtonMinMax_Click" ToolTip="Развернуть во весь экран/Уменьшить">
+                    <materialDesign:PackIcon Kind="WindowMaximize" Width="25" Height="25"/>
+                </Button>
+                <Button x:Name="ButtonClose" Style="{DynamicResource MenuButtonStyle}"  Click="ButtonClose_Click" ToolTip="Закрыть">
+                    <materialDesign:PackIcon Kind="Close" Width="25" Height="25"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1"  Margin="0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="400"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                    <Canvas x:Name="MapImage" Height="1000" Width="1000">
+                        <Canvas.LayoutTransform>
+                            <ScaleTransform ScaleY="1.25" ScaleX="1.25" />
+                        </Canvas.LayoutTransform>
+                    </Canvas>
+                </ScrollViewer>
+                <GridSplitter Grid.Row="1" Grid.Column="0" ShowsPreview="False" Height="3"
+       HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                
+            </Grid>
+
+            <GridSplitter Grid.RowSpan="2" Grid.Column="1" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+
+            <Grid  Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="400"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                    <DataGrid/>
+
+                </ScrollViewer>
+                <GridSplitter Grid.Row="1" Grid.Column="0" ShowsPreview="False" Height="3"
+       HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
