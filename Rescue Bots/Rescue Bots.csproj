@@ -73,8 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AlgorithmManager.cs" />
+    <Compile Include="Command.cs" />
     <Compile Include="ImageDrawer.cs" />
-    <Compile Include="Object.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="OutlinedTextBlock.cs" />
+    <Compile Include="Tractor.cs" />
     <Page Include="darkTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +119,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Rescue_Bots"
         mc:Ignorable="d"
-        Title="Роботы-спасатели" Height="600" Width="1024" WindowState="Maximized" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" FontSize="16" MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}" MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}">
+        Title="Дрон и тракторы" Height="600" Width="1024" MinHeight="500" MinWidth="600" WindowState="Maximized" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" FontSize="16" MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}" MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}">
     <Grid Style="{DynamicResource LayoutGridStyle}" Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -20,7 +20,7 @@
                 <Button Style="{DynamicResource MenuButtonStyle}">
                     <materialDesign:PackIcon Kind="RobotConfused" Width="25" Height="25"/>
                 </Button>
-                <Label Foreground="White" x:Name="WindowTitle"  Margin="0,0,30,0" ToolTip="Обучающая система - компьютерная игра &quot;Роботы-спасатели&quot; by Vikont" HorizontalAlignment="Center" VerticalAlignment="Center">Роботы-спасатели</Label>
+                <Label x:Name="WindowTitle"  Foreground="White" Margin="0,0,30,0" ToolTip="Обучающая система - компьютерная игра &quot;Дрон и тракторы&quot; by Vikont" HorizontalAlignment="Center" VerticalAlignment="Center">Дрон и тракторы</Label>
 
                 <Menu IsMainMenu="True" Style="{DynamicResource MenuStyle}">
                     <MenuItem Header="_Меню" Style="{DynamicResource MenuItemStyle_1}">
@@ -49,7 +49,7 @@
         </Grid>
         <Grid Grid.Row="1"  Margin="0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -59,16 +59,17 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Canvas x:Name="MapImage" Height="1000" Width="1000">
                         <Canvas.LayoutTransform>
                             <ScaleTransform ScaleY="1.25" ScaleX="1.25" />
                         </Canvas.LayoutTransform>
+                        <Image Height="100" Canvas.Left="27" Canvas.Top="267" Width="100" Source="icon.ico" RenderTransformOrigin="0.5,0.5" />
                     </Canvas>
                 </ScrollViewer>
                 <GridSplitter Grid.Row="1" Grid.Column="0" ShowsPreview="False" Height="3"
        HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-                
+
             </Grid>
 
             <GridSplitter Grid.RowSpan="2" Grid.Column="1" ShowsPreview="False" Width="3"
@@ -76,17 +77,100 @@
 
             <Grid  Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" MinHeight="400"/>
+                    <RowDefinition Height="*" MinHeight="200"/>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*"  MinHeight="80"/>
                 </Grid.RowDefinitions>
-                <ScrollViewer HorizontalScrollBarVisibility="Visible">
-                    <DataGrid/>
-
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <DataGrid x:Name="AlgorithmEditor" SelectionUnit="Cell" SelectionMode="Single" HeadersVisibility="Column"
+                              ColumnWidth="Auto"
+                              CanUserAddRows="true" CanUserDeleteRows="True" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" 
+                              IsReadOnly="true"
+                              GridLinesVisibility="All"
+                        Style="{DynamicResource DataGridStyle}" ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Такт" Width="60"/>
+                            <DataGridTextColumn Header="Адресат"/>
+                            <DataGridTextColumn Header="Команда"/>
+                            <DataGridTextColumn Header="Адресат"/>
+                            <DataGridTextColumn Header="Команда"/>
+                            <DataGridTextColumn Header="Адресат"/>
+                            <DataGridTextColumn Header="Команда"/>
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
                 </ScrollViewer>
                 <GridSplitter Grid.Row="1" Grid.Column="0" ShowsPreview="False" Height="3"
        HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid  x:Name="Tools" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"  IsEnabled="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="132"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="38"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="53"/>
+                        <RowDefinition Height="53"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="0" Grid.RowSpan="7" Margin="0,3,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="137"/>
+                        </Grid.ColumnDefinitions>
+                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                            <Grid x:Name="ObjectsTools" HorizontalAlignment="Stretch" MaxWidth="220" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" MaxWidth="114"/>
+                                    <ColumnDefinition Width="*" MaxWidth="114"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="5"/>
+                                    <RowDefinition Height="35"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="0" Grid.Row="0" MaxWidth="109" Margin="2,0,2,0"  Style="{StaticResource MaterialDesignOutlinedButton}"    Content="Все" ToolTip="Открыть алгоритм из файла"/>
 
+                            </Grid>
+                        </ScrollViewer>
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                            <Grid x:Name="CommandsTools">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="5"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="5"/>
+                                    <RowDefinition Height="53"/>
+                                    <RowDefinition Height="53"/>
+                                </Grid.RowDefinitions>
+                                <Button x:Name="ButtonStart" Grid.Column="1" Grid.Row="0" Width="109"  Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False"   Content="Вперед" ToolTip="Открыть алгоритм из файла"/>
+                                <Button x:Name="ButtonStop" Grid.Column="1" Grid.Row="1" Width="109"  Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False"   Content="Стоп" ToolTip="Открыть алгоритм из файла"/>
+                                <Button x:Name="ButtonToLeft" Grid.Column="1" Grid.Row="3" Width="109"  Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False"   Content="Налево" ToolTip="Открыть алгоритм из файла"/>
+                                <Button x:Name="ButtonToRight" Grid.Column="1" Grid.Row="4" Width="109"  Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False"   Content="Направо" ToolTip="Открыть алгоритм из файла"/>
+                                <Button x:Name="ButtonDownTool" Grid.Column="1" Grid.Row="6" Width="109"  Height="50" Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False"   ToolTip="Открыть алгоритм из файла">
+                                    <TextBlock TextAlignment="Center"> Опустить<LineBreak/>плуг</TextBlock>
+                                </Button>
+                                <Button x:Name="ButtonUpTool" Grid.Column="1" Grid.Row="7" Width="109"  Height="50" Margin="5,0"  Style="{StaticResource MaterialDesignOutlinedButton}" Focusable="False" ToolTip="Открыть алгоритм из файла">
+                                    <TextBlock TextAlignment="Center"> Поднять<LineBreak/>плуг</TextBlock>
+                                </Button>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Button x:Name="ButtonOpenAlgorithm" Grid.Column="1" Grid.Row="0" Width="111"  Margin="0,3,0,0"  Style="{StaticResource MaterialDesignOutlinedButton}"    Content="Открыть" ToolTip="Открыть алгоритм из файла"/>
+                    <Button x:Name="ButtonSaveAlgorithm" Grid.Column="1" Grid.Row="1" Width="111"  Margin="10,0"  Style="{StaticResource MaterialDesignOutlinedButton}"    Content="Сохранить" ToolTip="Сохранить алгоритм в файл"/>
+                    <Button x:Name="ButtonExecute" Grid.Column="1" Grid.Row="3" Width="111"  Margin="10,0"  Style="{StaticResource MaterialDesignOutlinedButton}"     Content="Выполнить" ToolTip="Сохранить алгоритм в файл"/>
+                    <Button x:Name="ButtonExecuteStep" Grid.Column="1" Grid.Row="4" Width="111"  Height="50" Margin="10,0"  Style="{StaticResource MaterialDesignOutlinedButton}"     ToolTip="Сохранить алгоритм в файл">
+                        <TextBlock TextAlignment="Center"> Выполнить<LineBreak/>шаг</TextBlock>
+                    </Button>
+                    <Button x:Name="ButtonExecuteByPosition" Grid.Column="1" Grid.Row="5" Width="111"  Height="50" Margin="10,0"  Style="{StaticResource MaterialDesignOutlinedButton}"     ToolTip="Сохранить алгоритм в файл">
+                        <TextBlock TextAlignment="Center"> Выполнить<LineBreak/>до позиции</TextBlock>
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

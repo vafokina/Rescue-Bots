@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Rescue_Bots.AlgorithmManager">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QARBFkAgAAAgAGIABgBEAAAAAASAgBCEQgECAAIAAAA=</HashCode>
+      <FileName>AlgorithmManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.SwitcherCommand">
+    <Position X="1.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.CommandGoForward" BaseTypeListCollapsed="true">
+    <Position X="1.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAACAAQAAEAAAACAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Command.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rescue_Bots.CommandRoundToLeft" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAACAAQAAEAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Command.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rescue_Bots.GameObject">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.ImageDrawer">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAQAAAAAAAAAAAABAAAAAEEAAAAAAAA=</HashCode>
+      <FileName>ImageDrawer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.Map">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAABAAAEAAAAAACkBAAAgAEIAAAAAAQAAEBQ=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.Tractor">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Rescue_Bots.Tractor.Direction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Tractor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAACQQAAECAAAIIiAAAgAAQAAAAAAAAAAAACAAAAggA=</HashCode>
+      <FileName>Tractor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rescue_Bots.MainWindow">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAACAAIAAQgAAAAAAQCAAAAABAEAAAAAAAAFAQA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

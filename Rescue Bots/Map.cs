@@ -10,26 +10,26 @@ using System.Xml;
 
 namespace Rescue_Bots
 {
-   public class Map
+    public class Map
     {
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
         public int MapWidth { get; set; }
         public int MapHeight { get; set; }
         public string[,] MapString { get; set; }
+        public string[,] MapStringObjects { get; set; }
+        public string Tileset { get; set; }
         public List<int[]> Tiles { get; set; }
         public List<string> LayersNames { get; set; }
-        public string Tileset { get; set; }
-        public Bitmap MapBitmap { get; set; }
+        public Bitmap MapBackgroundBitmap { get; set; }
+        public System.Windows.Controls.Image MapBackground { get; set; }
+        public List<GameObject> Targets { get; set; }
+        public List<Tractor> Tractors { get; set; }
 
-        public System.Windows.Controls.Image MapLayout {get;set;}
-        public List<Object> Robots { get; set; }
-        public List<Object> Humans { get; set; }
-
-
-        // public Bitmap PlayingField { get; set; }
-
-
+        /// <summary>
+        /// Создание карты из файла
+        /// </summary>
+        /// <param name="path"></param>
         public Map(string path)
         {
             XmlDocument xDoc = new XmlDocument();
@@ -45,9 +45,10 @@ namespace Rescue_Bots
             MapString = new string[MapWidth, MapHeight];
             Tiles = new List<int[]>(4);
             LayersNames = new List<string>(4);
-            Robots = new List<Object>();
-            Humans = new List<Object>();
+            Tractors = new List<Tractor>();
+            Targets = new List<GameObject>();
 
+            // парсинг xml-файла карта
             int countTilesets = 0;
             foreach (XmlNode xnode in xRoot)
             {
@@ -86,112 +87,84 @@ namespace Rescue_Bots
                     }
                 }
             }
-            
-            MapBitmap = LoadMap();
-            if (MainWindow.Drawer == null) throw new Exception("ImageDrawer is null");
-            MapLayout = MainWindow.Drawer.BitmapToControl(MapBitmap);
+
+            LoadMap();
+            MapBackground = ImageDrawer.BitmapToControl(MapBackgroundBitmap);
         }
 
-        public Bitmap LoadMap()
+        /// <summary>
+        /// Отрисовка карты на Bitmap с использованием тайлсета в формате png
+        /// </summary>
+        public void LoadMap()
         {
             Bitmap bmp = new Bitmap(TileWidth * MapWidth, TileHeight * MapHeight);
-            using (Graphics g = Graphics.FromImage(bmp))
+            Graphics g = Graphics.FromImage(bmp);
+
+            Bitmap tileset = (Bitmap)System.Drawing.Image.FromFile("tiles 4.png");
+            System.Drawing.Imaging.PixelFormat format = tileset.PixelFormat;
+
+            int iTilesetMax = tileset.Width / TileWidth;
+
+            int indexLayer = 0;
+
+            foreach (int[] layer in Tiles)
             {
-                Bitmap tileset = (Bitmap)System.Drawing.Image.FromFile("tiles 1.png");
-                System.Drawing.Imaging.PixelFormat format = tileset.PixelFormat;
+                int iMap = 0;
+                int jMap = 0;
 
-                int iTilesetMax = tileset.Width / TileWidth;
-
-                int indexLayer = 0;
-
-                foreach (int[] layer in Tiles)
+                foreach (int t in layer)
                 {
-                   int iMap = 0;
-                    int jMap = 0;
-
-                    if (LayersNames[indexLayer] == "Humans" || LayersNames[indexLayer] == "Robots")
+                    int num = t;
+                    if (num != 0)
                     {
-                        foreach (int t in layer)
+                        num--;
+
+                        int jTileset = num / iTilesetMax;
+                        int iTileset = num % iTilesetMax;
+
+                        System.Drawing.Rectangle rectangleCut = new System.Drawing.Rectangle(iTileset * TileWidth, jTileset * TileHeight, TileWidth, TileHeight);
+                        Bitmap tile = tileset.Clone(rectangleCut, format);
+
+                        System.Drawing.Rectangle rectangleInsert = new System.Drawing.Rectangle(iMap * TileWidth, jMap * TileHeight, TileWidth, TileHeight);
+
+                        if (LayersNames[indexLayer] == "Background" || LayersNames[indexLayer] == "Back")
                         {
-                            int num = t;
-                            if (num != 0)
-                            {
-                                num--;
-
-                                int jTileset = num / iTilesetMax;
-                                int iTileset = num % iTilesetMax;
-
-                                System.Drawing.Rectangle rectangleCut = new System.Drawing.Rectangle(iTileset * TileWidth, jTileset * TileHeight, TileWidth, TileHeight);
-                                Bitmap tile = tileset.Clone(rectangleCut, format);
-
-                                if (LayersNames[indexLayer] == "Robots")
-                                {
-                                    Robots.Add(new Object(tile, iMap, jMap, Robots.Count+1));
-                                    MapString[iMap, jMap] = "1";
-                                }
-                                else
-                                {
-                                    Humans.Add(new Object(tile, iMap, jMap));
-                                    MapString[iMap, jMap] = "X";
-                                }
-                            }
-
-                            iMap++;
-                            if (iMap == MapWidth)
-                            {
-                                iMap = 0;
-                                jMap++;
-                            }
-                        }
-                    }
-                    
-
-                    foreach (int t in layer)
-                    {
-                        int num = t;
-                        if (num != 0)
-                        {
-                            num--;
-
-                            int jTileset = num / iTilesetMax;
-                            int iTileset = num % iTilesetMax;
-
-                            System.Drawing.Rectangle rectangleCut = new System.Drawing.Rectangle(iTileset * TileWidth, jTileset * TileHeight, TileWidth, TileHeight);
-                            Bitmap tile = tileset.Clone(rectangleCut, format);
-
-                            System.Drawing.Rectangle rectangleInsert = new System.Drawing.Rectangle(iMap * TileWidth, jMap * TileHeight, TileWidth, TileHeight);
                             g.DrawImage(tile, rectangleInsert);
-
-                            if (LayersNames[indexLayer] == "Ground" || LayersNames[indexLayer] == "Grass")
+                            MapString[iMap, jMap] = "1";
+                        }
+                        else if (LayersNames[indexLayer] == "Blocks" || LayersNames[indexLayer] == "Block")
+                        {
+                            g.DrawImage(tile, rectangleInsert);
+                            MapString[iMap, jMap] = "B";
+                            GameObject o = Targets.Find(a => a.X == iMap && a.Y == jMap);
+                            if (o != null) Targets.Remove(o);
+                        }
+                        else if (LayersNames[indexLayer] == "Targets" || LayersNames[indexLayer] == "Target")
+                        {
+                            if (MapString[iMap, jMap] != "B")
                             {
+                                Targets.Add(new GameObject(tile, iMap, jMap));
                                 MapString[iMap, jMap] = "0";
                             }
-                            else if (LayersNames[indexLayer] == "Holes")
-                            {
-                                MapString[iMap, jMap] = "H";
-                            }
-                            else if (LayersNames[indexLayer] == "Rocks")
-                            {
-                                MapString[iMap, jMap] = "R";
-                            }
-
                         }
-
-                        iMap++;
-                        if (iMap == MapWidth)
+                        else if (LayersNames[indexLayer] == "Tractors" || LayersNames[indexLayer] == "Tractor")
                         {
-                            iMap = 0;
-                            jMap++;
+                            Tractors.Add(new Tractor(Tractors.Count + 1, tile, iMap, jMap, "Трактор"));
                         }
                     }
 
-                    indexLayer++;
+                    iMap++;
+                    if (iMap == MapWidth)
+                    {
+                        iMap = 0;
+                        jMap++;
+                    }
                 }
-                //g.DrawLine(new System.Drawing.Pen(System.Drawing.Color.Red), 0, 0, bmp.Width, 0);
-                //g.DrawLine(new System.Drawing.Pen(System.Drawing.Color.Red), 0, 0, 0, bmp.Height);
-            }
 
-            return bmp;
+                indexLayer++;
+            }
+            MapBackgroundBitmap = bmp;
+            g.Dispose();
         }
     }
 }

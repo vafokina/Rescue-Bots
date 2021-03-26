@@ -22,17 +22,40 @@ namespace Rescue_Bots
     public partial class MainWindow : Window
     {
         static public ImageDrawer Drawer;
-        static public Map CurrentMap;
+        static public AlgorithmManager Manager;
         public MainWindow()
         {
             InitializeComponent();
             ThemeChange("lightTheme");
             Drawer = new ImageDrawer();
+            Drawer.View = MapImage;
+            Manager = new AlgorithmManager();
+            Manager.DataView = AlgorithmEditor;
+            Manager.Tools = Tools;
+            Manager.ObjectsTools = ObjectsTools;
+            Manager.CommandTools = CommandsTools;
+            Manager.ButtonSaveAlgorithm = ButtonSaveAlgorithm;
+            Manager.ButtonOpenAlgorithm = ButtonOpenAlgorithm;
+            Manager.ButtonExecute = ButtonExecute;
+            Manager.ButtonExecuteStep = ButtonExecuteStep;
+            Manager.ButtonExecuteByPosition = ButtonExecuteByPosition;
+            KeyDown += AnyKeyDown;
+            KeyUp += AnyKeyUp;
+        }
 
-            //List<string> styles = new List<string> { "light", "dark" };
-            //styleBox.SelectionChanged += ThemeChange;
-            //styleBox.ItemsSource = styles;
-            //styleBox.SelectedItem = "dark";
+        private void AnyKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.X)
+                ButtonOpenMap_Click(sender, e);
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.O)
+                ButtonOpenMap_Click(sender, e);
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.E)
+                ButtonClose_Click(sender, e);
+            if (e.Key == Key.Delete && Manager.CurrentMap != null)
+                Manager.ClearCell();
+        }
+        private void AnyKeyUp(object sender, KeyEventArgs e)
+        {
         }
 
         private void ThemeChange(string style)//(object sender, SelectionChangedEventArgs e)
@@ -82,44 +105,6 @@ namespace Rescue_Bots
                 ThemeChange("darkTheme");
         }
 
-        private void ShowMap()
-        {
-            if (CurrentMap == null) throw new Exception("No loaded map");
-
-            //MapImage.Children.Add(CurrentMap.MapLayout);
-            MapImage.Children.Add(Drawer.BitmapToControl(CurrentMap.MapBitmap));
-            MapImage.Height = CurrentMap.MapLayout.Height;
-            MapImage.Width = CurrentMap.MapLayout.Width;
-                for (int j = 1; j < CurrentMap.MapHeight; j++)
-                {
-                    Line line = new Line();
-                    line.Y1 = j * 32;
-                    line.Y2 = line.Y1;
-                    line.X1 = 0;
-                    line.X2 = CurrentMap.MapLayout.Width;
-                    line.Stroke = System.Windows.Media.Brushes.Yellow;
-                MapImage.Children.Add(line);
-                }
-                for (int i = 1; i < CurrentMap.MapWidth; i++)
-                {
-                    Line line = new Line();
-                    line.X1 = i * 32;
-                    line.X2 = line.X1;
-                    line.Y1 = 0;
-                    line.Y2 = CurrentMap.MapLayout.Height;
-                    line.Stroke = System.Windows.Media.Brushes.Yellow;
-                MapImage.Children.Add(line);
-                }
-            //    foreach (Object o in CurrentMap.Humans)
-            //{
-            //    MapImage.Children.Add(o.ImageControl);
-            //}
-            //foreach (Object o in CurrentMap.Robots)
-            //{
-            //    MapImage.Children.Add(o.ImageControl);
-            //}
-        }
-
         private void ButtonOpenMap_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -134,9 +119,18 @@ namespace Rescue_Bots
             {
                 // Open document
                 string filename = dlg.FileName;
-                CurrentMap = new Map(filename);
-                ShowMap();
+                Map map = new Map(filename);
+                Drawer.CurrentMap = map;
+                Manager.CurrentMap = map;
             }
         }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+
     }
 }
